@@ -26,9 +26,13 @@ mkdir datacube/{original_data,ingested_data}
 - run `sudo docker-compose build | tee -a docker-compose.build.log` to create necessary containers
 - run `sudo docker-compose up | tee -a docker-compose.up.log` to spin up all containers
 
-The Data Cube UI can be accessed via `localhost:80` or equivalent. `0.0.0.0:80` works, too.
-
 Note: While technically it is not necessary to pipe the output into tee, it is helpful in debugging problems.
+
+The Data Cube UI can be accessed via `localhost:80` or equivalent. `0.0.0.0:80` works, too. At the moment, the following works:
+- ingesting data into the datacube
+- accessing the web interface via web browser
+
+The web interface will be empty though, there are no algorithms for processing and no areas to do processing on configured by default.
 
 CEOS Data Cube UI
 =================

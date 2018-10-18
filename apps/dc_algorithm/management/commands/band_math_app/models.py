@@ -60,7 +60,7 @@ class Query(BaseQuery):
     foreign keys should define __str__ for a human readable name.
 
     """
-    compositor = models.ForeignKey(Compositor)
+    compositor = models.ForeignKey(Compositor, on_delete=models.CASCADE)
 
     #TODO: add color scale here
     color_scale_path = os.path.join(settings.BASE_DIR, 'utils/color_scales/default_color_scale')

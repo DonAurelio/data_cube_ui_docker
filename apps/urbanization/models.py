@@ -60,7 +60,7 @@ class Query(BaseQuery):
     foreign keys should define __str__ for a human readable name.
 
     """
-    compositor = models.ForeignKey(Compositor)
+    compositor = models.ForeignKey(Compositor, on_delete=models.CASCADE)
 
     base_result_dir = os.path.join(settings.RESULTS_DATA_DIR, 'urbanization')
 

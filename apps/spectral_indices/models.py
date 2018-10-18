@@ -68,8 +68,8 @@ class Query(BaseQuery):
     foreign keys should define __str__ for a human readable name.
 
     """
-    compositor = models.ForeignKey(Compositor)
-    query_type = models.ForeignKey(ResultType)
+    compositor = models.ForeignKey(Compositor, on_delete=models.CASCADE)
+    query_type = models.ForeignKey(ResultType, on_delete=models.CASCADE)
 
     color_scale_path = {
         'ndvi': os.path.join(settings.BASE_DIR, 'utils/color_scales/ndvi'),

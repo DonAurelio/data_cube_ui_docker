@@ -77,8 +77,8 @@ class Query(BaseQuery):
 
     """
 
-    query_type = models.ForeignKey(ResultType)
-    animated_product = models.ForeignKey(AnimationType)
+    query_type = models.ForeignKey(ResultType, on_delete=models.CASCADE)
+    animated_product = models.ForeignKey(AnimationType, on_delete=models.CASCADE)
 
     base_result_dir = os.path.join(settings.RESULTS_DATA_DIR, 'water_detection')
     color_scales = {

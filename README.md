@@ -10,7 +10,7 @@ What has been changed in this fork?
 - configuration files for Docker, based on <https://github.com/crc-si/datacube-ui-clean>, have been added
 - scripts for initializing the datacube and for ingesting data have been added
 
-This is a work in progress and there are still a few things todo, before everything works together as it should. To see, what needs to be done, look at the issues.
+This is a work in progress and there are still a few things to do, before everything works together as it should. To see, what needs to be done, look at the issues. Also, before using this in production, keep in mind to change credentials in the Docker configuration files and go through Django's `settings.py` to use another secret key, deactivate debug mode etc.
 
 How to run this?
 ================
@@ -18,13 +18,14 @@ How to run this?
 - clone this repository and cd into it
 - create a directory to host the data for the datacube on your host:
 ```
-mkdir datacube/{original_data,ingested_data}
+mkdir datacube
 ```
-- prepare your ingestion configuration as usual and place the original data unpacked into `datacube/original_data`
-- adjust the filepaths for the ingestion configuration in `ingest-data.sh`
-- adjust host-side filepath for the datacube volume in `docker-compose.yml`
+- adjust host-side filepath for the datacube volume in `docker-compose.yml` (use the absolute path to the above created directory)
 - run `sudo docker-compose build | tee -a docker-compose.build.log` to create necessary containers
 - run `sudo docker-compose up | tee -a docker-compose.up.log` to spin up all containers
+- run `initialize-datacube.sh` to initialize the datacube and create some required directories inside the `datacube` volume
+- prepare your ingestion configuration as usual and place the original data unpacked into `datacube/original_data`
+- adjust the filepaths for the ingestion configuration in `ingest-data.sh`
 
 Note: While technically it is not necessary to pipe the output into tee, it is helpful in debugging problems.
 

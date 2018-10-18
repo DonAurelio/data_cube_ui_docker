@@ -1,3 +1,35 @@
+What is the purpose of this fork?
+=================================
+This fork tries to collect scripts and configuration files to run the Data Cube UI dockerized.
+
+What has been changed in this fork?
+===================================
+- Git history has been removed to avoid problems with large files that had been added and removed from the original repository
+- both patches from <https://github.com/ikselven/datacube-setup-scripts> have been applied
+- Django migrations have been added to this repository
+- configuration files for Docker, based on <https://github.com/crc-si/datacube-ui-clean>, have been added
+- scripts for initializing the datacube and for ingesting data have been added
+
+This is a work in progress and there are still a few things todo, before everything works together as it should. To see, what needs to be done, look at the issues.
+
+How to run this?
+================
+- install Docker and Docker Compose on your machine (host)
+- clone this repository and cd into it
+- create a directory to host the data for the datacube on your host:
+```
+mkdir datacube/{original_data,ingested_data}
+```
+- prepare your ingestion configuration as usual and place the original data unpacked into `datacube/original_data`
+- adjust the filepaths for the ingestion configuration in `ingest-data.sh`
+- adjust host-side filepath for the datacube volume in `docker-compose.yml`
+- run `sudo docker-compose build | tee -a docker-compose.build.log` to create necessary containers
+- run `sudo docker-compose up | tee -a docker-compose.up.log` to spin up all containers
+
+The Data Cube UI can be accessed via `localhost:80` or equivalent. `0.0.0.0:80` works, too.
+
+Note: While technically it is not necessary to pipe the output into tee, it is helpful in debugging problems.
+
 CEOS Data Cube UI
 =================
 

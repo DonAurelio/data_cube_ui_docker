@@ -1,0 +1,79 @@
+version: "2"
+services:
+  www:
+    build:
+      context: .
+    volumes:
+      - ./:/code
+      - ./datacube:/datacube
+    environment:
+      # These are for Django
+      - POSTGRES_HOSTNAME=db
+      - POSTGRES_DATABASE=datacube
+      - POSTGRES_USER=datacube
+      - POSTGRES_PASSWORD=opendatacubepassword
+      # These are for ODC
+      - DB_HOSTNAME=db
+      - DB_USERNAME=datacube
+      - DB_PASSWORD=opendatacubepassword
+      - DB_DATABASE=odc
+    depends_on:
+      - db
+    networks:
+      - nginx_network
+      - database_network
+
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - ./static:/static
+    depends_on:
+      - www
+    networks:
+      - nginx_network
+
+  myrabbit:
+    image: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+      - 5672:5672
+      - 15672:15672
+  celeryworker:
+    build:
+      context: .
+    volumes:
+      - ./:/code
+      - ./datacube:/datacube
+    environment:
+      # These are for ODC
+      - DB_HOSTNAME=db
+      - DB_USERNAME=datacube
+      - DB_PASSWORD=opendatacubepassword
+      - DB_DATABASE=odc
+    command: ['celery', '-A', 'data_cube_ui.celery', 'worker', '--loglevel', 'info']
+    links:
+        - myrabbit
+    networks:
+      - database_network
+
+  redis:
+    image: redis
+
+  db:
+    image: mdillon/postgis:9.6
+    environment:
+      - POSTGRES_USER=datacube
+      - POSTGRES_PASSWORD=opendatacubepassword
+    networks:
+      - database_network
+
+networks:
+  nginx_network:
+    driver: bridge
+  database_network:
+    driver: bridge

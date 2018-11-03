@@ -53,9 +53,12 @@ db_pass = os.environ.get('POSTGRES_PASSWORD', 'localuser1234')
 db_name = os.environ.get('POSTGRES_DATABASE', db_user)
 db_host = os.environ.get('POSTGRES_HOSTNAME', '127.0.0.1')
 db_port = os.environ.get('POSTGRES_PORT', '5432')
+dc_name = os.environ.get('DB_DATABASE', 'odc')
 
 # Set the master node from the environment of from the db host
 MASTER_NODE = os.environ.get('DC_HOSTNAME', db_host)
+
+redis_host = os.environ.get('REDIS_HOSTNAME', '172.21.0.3')
 
 # Application definition
 BASE_HOST = "localhost:8000/"
@@ -65,7 +68,7 @@ EMAIL_PORT = '25'
 
 LOCAL_USER = "localuser"
 
-RESULTS_DATA_DIR = "path/to/datacube/data/ui_results"
+RESULTS_DATA_DIR = "/datacube/ui_results"
 
 INSTALLED_APPS = [
     'apps.custom_mosaic_tool',
@@ -156,7 +159,7 @@ DATABASES = {
         'OPTIONS': {
             'options': '-c search_path=agdc'
         },
-        'NAME': db_name,
+        'NAME': dc_name,
         'USER': db_user,
         'PASSWORD': db_pass,
         'HOST': db_host,
@@ -207,8 +210,8 @@ STATICFILES_DIRS = [
 
 # CELERY STUFF
 
-BROKER_URL = 'redis://' + MASTER_NODE + ':6379'
-CELERY_RESULT_BACKEND = 'redis://' + MASTER_NODE + ':6379'
+BROKER_URL = 'redis://' + redis_host + ':6379'
+CELERY_RESULT_BACKEND = 'redis://' + redis_host + ':6379'
 CELERY_ACCEPT_CONTENT = ['pickle']
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_RESULT_SERIALIZER = 'pickle'

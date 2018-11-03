@@ -57,7 +57,7 @@
             {% for task in running_tasks %}
             var w = new Worker("/static/assets/js/dcw.js");
             w.postMessage({
-                'tool_name': window.tool_name,
+                'tool_name': '{{ tool_name }}',
                 'status': "HISTORY",
                 "title": '{{ task.title }}',
                 'id': '{{ task.id }}',
@@ -280,7 +280,7 @@
           jQuery(".additional_options_description").val("");
           save_options();
           w.postMessage({
-              'tool_name': window.tool_name,
+              'tool_name': '{{ tool_name }}',
               'status': "NEW",
               'form_data': request,
               'csrf': csrftoken
@@ -308,7 +308,7 @@
         $("#" + sanitize_id("cancel_" + id)).click(function() {
             workers[id].terminate();
             if (tasks[id] != null)
-                $.get('/' + window.tool_name + '/cancel', {
+                $.get('/{{ tool_name }}/cancel', {
                     'id': tasks[id].id
                 }, function(result) {
                     //console.log(result);

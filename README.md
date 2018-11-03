@@ -32,8 +32,9 @@ Note: While technically it is not necessary to pipe the output into tee, it is h
 The Data Cube UI can be accessed via `localhost:8080` or equivalent. `0.0.0.0:8080` works, too. At the moment, the following works:
 - ingesting data into the datacube
 - accessing the web interface via web browser
+- conduct analyses, if data is available in the data cube
 
-The web interface will be empty though, there are no algorithms for processing and no areas to do processing on configured by default.
+Although sample data for Django is being inserted while running the `initialize-datacube.sh` step, no data is available within the data cube. Therefore, you need to ingest data into the datacube first and then configure the correct areas within Django.
 
 CEOS Data Cube UI
 =================

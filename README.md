@@ -29,7 +29,7 @@ mkdir datacube
 
 Note: While technically it is not necessary to pipe the output into tee, it is helpful in debugging problems.
 
-The Data Cube UI can be accessed via `localhost:80` or equivalent. `0.0.0.0:80` works, too. At the moment, the following works:
+The Data Cube UI can be accessed via `localhost:8080` or equivalent. `0.0.0.0:8080` works, too. At the moment, the following works:
 - ingesting data into the datacube
 - accessing the web interface via web browser
 

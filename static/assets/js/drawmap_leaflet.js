@@ -27,7 +27,7 @@ function DrawMap(container_id, options) {
     zoomSnap: 0.25
   });
 
-  var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
   });
 

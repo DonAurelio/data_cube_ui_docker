@@ -2,7 +2,7 @@ FROM opendatacube/datacube-core
 
 
 RUN apt-get update && apt-get install -y \
-    libgeos++-dev git python3-scipy postgresql-client \
+    libgeos++-dev git python3-scipy postgresql-client imagemagick \
     && rm -rf /var/lib/apt/lists/*
 
 ADD ./requirements/requirements.txt /tmp/requirements.txt
@@ -14,8 +14,6 @@ RUN pip3 install \
 RUN pip3 install \
     -r /tmp/requirements.txt \
     && rm -rf $HOME/.cache/pip
-
-VOLUME ./datacube /datacube
 
 ADD . /code
 WORKDIR /code

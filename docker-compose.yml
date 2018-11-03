@@ -17,32 +17,28 @@ services:
       - DB_USERNAME=datacube
       - DB_PASSWORD=opendatacubepassword
       - DB_DATABASE=odc
+      # REDIS
+      - REDIS_HOSTNAME=redis
     depends_on:
       - db
     networks:
       - nginx_network
       - database_network
+      - redis_network
 
   nginx:
     image: nginx
     ports:
-      - 80:80
+      - 8080:80
     volumes:
       - ./config/nginx/conf.d:/etc/nginx/conf.d
       - ./static:/static
+      - ./datacube:/datacube
     depends_on:
       - www
     networks:
       - nginx_network
 
-  myrabbit:
-    image: rabbitmq
-    environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=mypass
-    ports:
-      - 5672:5672
-      - 15672:15672
   celeryworker:
     build:
       context: .
@@ -50,19 +46,46 @@ services:
       - ./:/code
       - ./datacube:/datacube
     environment:
+      # These are for Django
+      - POSTGRES_HOSTNAME=db
+      - POSTGRES_DATABASE=datacube
+      - POSTGRES_USER=datacube
+      - POSTGRES_PASSWORD=opendatacubepassword
       # These are for ODC
       - DB_HOSTNAME=db
       - DB_USERNAME=datacube
       - DB_PASSWORD=opendatacubepassword
       - DB_DATABASE=odc
-    command: ['celery', '-A', 'data_cube_ui.celery', 'worker', '--loglevel', 'info']
-    links:
-        - myrabbit
+      # Redis configuration
+      - REDIS_HOSTNAME=redis
+      # This need to be changed in the future, do not run services as root
+      - C_FORCE_ROOT=true
+    command: ['celery', '-A', 'data_cube_ui.celery', 'worker', '--loglevel', 'debug']
     networks:
       - database_network
+      - redis_network
 
   redis:
     image: redis
+    networks:
+      - redis_network
+
+  jupyter:
+    image: opendatacube/jupyter
+    environment:
+      - DB_HOSTNAME=db
+      - DB_USERNAME=datacube
+      - DB_PASSWORD=opendatacubepassword
+      - DB_DATABASE=odc
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/notebooks
+      - ./datacube:/datacube
+    #shm_size: 1g
+    command: jupyter notebook --ip="0.0.0.0" --NotebookApp.token='mysecretpassword'
+    networks:
+      - database_network
 
   db:
     image: mdillon/postgis:9.6
@@ -71,9 +94,15 @@ services:
       - POSTGRES_PASSWORD=opendatacubepassword
     networks:
       - database_network
+    volumes:
+      - ./postgres_data/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
 networks:
   nginx_network:
     driver: bridge
   database_network:
+    driver: bridge
+  redis_network:
     driver: bridge
